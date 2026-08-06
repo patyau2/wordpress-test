@@ -1,0 +1,11 @@
+{
+  "name": "rlx-wordpress-site",
+  "private": true,
+  "scripts": {
+    "preview": "wp-playground-cli start --auto-mount=wp-content/themes/rlx-signal --login",
+    "preview:server": "wp-playground-cli server --mount=./wp-content/themes/rlx-signal:/wordpress/wp-content/themes/rlx-signal --blueprint=./blueprint.json --login --port=9400"
+  },
+  "devDependencies": {
+    "@wp-playground/cli": "latest"
+  }
+}

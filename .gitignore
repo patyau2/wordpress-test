@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+Thumbs.db
+wp-config.php
+wp-content/uploads/
+wp-content/cache/
+*.log
+

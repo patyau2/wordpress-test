@@ -1,0 +1,70 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "color": {
+      "custom": false,
+      "palette": [
+        {
+          "slug": "ink",
+          "color": "#0b0e12",
+          "name": "RLX Ink"
+        },
+        {
+          "slug": "paper",
+          "color": "#f2f4f1",
+          "name": "RLX Paper"
+        },
+        {
+          "slug": "signal-green",
+          "color": "#45c491",
+          "name": "Signal Green"
+        },
+        {
+          "slug": "steel",
+          "color": "#a7b0ad",
+          "name": "Steel"
+        }
+      ]
+    },
+    "layout": {
+      "contentSize": "760px",
+      "wideSize": "1280px"
+    },
+    "spacing": {
+      "units": [
+        "px",
+        "rem",
+        "vw",
+        "%"
+      ]
+    },
+    "typography": {
+      "fluid": true,
+      "fontFamilies": [
+        {
+          "fontFamily": "\"Instrument Sans\", Arial, sans-serif",
+          "name": "Instrument Sans",
+          "slug": "instrument-sans"
+        },
+        {
+          "fontFamily": "\"IBM Plex Mono\", Consolas, monospace",
+          "name": "IBM Plex Mono",
+          "slug": "ibm-plex-mono"
+        }
+      ]
+    }
+  },
+  "styles": {
+    "color": {
+      "background": "#0b0e12",
+      "text": "#f9fbf8"
+    },
+    "typography": {
+      "fontFamily": "var:preset|font-family|instrument-sans",
+      "lineHeight": "1.55"
+    }
+  }
+}
+

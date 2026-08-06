@@ -1,0 +1,22 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "landingPage": "/",
+  "steps": [
+    {
+      "step": "activateTheme",
+      "themeFolderName": "rlx-signal"
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "睿聲助聽器",
+        "blogdescription": "專業聽力服務與助聽器選配",
+        "show_on_front": "posts"
+      }
+    }
+  ]
+}
