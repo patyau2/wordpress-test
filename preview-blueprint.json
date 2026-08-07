@@ -1,0 +1,31 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "landingPage": "/",
+  "steps": [
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "git:directory",
+        "url": "https://github.com/patyau2/wordpress-test",
+        "ref": "master",
+        "refType": "branch",
+        "path": "wp-content/themes/rlx-signal"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "睿聲助聽器",
+        "blogdescription": "專業聽力服務與助聽器選配",
+        "show_on_front": "posts"
+      }
+    }
+  ]
+}
