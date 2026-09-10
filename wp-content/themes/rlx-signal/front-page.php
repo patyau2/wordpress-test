@@ -1,75 +1,77 @@
 <?php
 /**
- * Smart Hearing inspired homepage.
+ * Database-backed Smart Hearing inspired homepage.
  *
  * @package RLX_Signal
  */
+
 get_header();
 
-$asset = static function ( $filename ) {
-	return rlx_signal_asset( 'smarthearing/' . $filename );
-};
-
-$news = array(
-	array(
-		'image'    => 'news-hear-more.webp',
-		'date'     => '2026.06.30',
-		'category' => '學術研討會',
-		'title'    => 'Hear More 2026 - 接軌國際，聽見自信',
-	),
-	array(
-		'image'    => 'news-holiday.webp',
-		'date'     => '2026.06.17',
-		'category' => '新聞快訊',
-		'title'    => '端午連假｜睿聲門市公告',
-	),
-	array(
-		'image'    => 'news-subsidy.jpg',
-		'date'     => '2026.05.29',
-		'category' => '新聞快訊',
-		'title'    => '補助資訊｜睿聲助聽器',
-	),
-);
-
-$brands = array(
-	array( 'image' => 'brand-resound.png', 'title' => 'ReSound 助聽器' ),
-	array( 'image' => 'brand-interton.png', 'title' => 'Interton 助聽器' ),
-	array( 'image' => 'brand-audibel.png', 'title' => '美國 AUDIBEL 助聽器' ),
-	array( 'image' => 'brand-phonak.jpg', 'title' => '瑞士 PHONAK 助聽器' ),
-);
+$hero_slides = rlx_signal_section_posts( 'rlx_hero_slide', 9 );
+$news_items  = rlx_signal_section_posts( 'rlx_news', 3 );
+$stories     = rlx_signal_story_posts( 'stories', 2 );
+$articles    = rlx_signal_story_posts( 'articles', 2 );
+$brands      = rlx_signal_section_posts( 'rlx_brand', 4 );
+$promos      = rlx_signal_section_posts( 'rlx_promo', 3 );
 ?>
 
 <main id="main">
-	<section class="home-hero" aria-label="睿聲助聽器最新活動">
-		<a href="#products" class="hero-slide">
-			<picture>
-				<source media="(max-width: 767px)" srcset="<?php echo $asset( 'hero-active-mobile.jpg' ); ?>">
-				<img src="<?php echo $asset( 'hero-active.webp' ); ?>" alt="睿聲助聽器最新活動" width="1920" height="850" fetchpriority="high">
-			</picture>
-		</a>
-		<button class="slider-arrow slider-arrow-left" type="button" aria-label="上一張"><span aria-hidden="true">‹</span></button>
-		<button class="slider-arrow slider-arrow-right" type="button" aria-label="下一張"><span aria-hidden="true">›</span></button>
-		<div class="slider-dots" aria-label="活動輪播">
-			<?php for ( $i = 1; $i <= 9; $i++ ) : ?>
-				<button type="button" class="<?php echo 1 === $i ? 'is-active' : ''; ?>" aria-label="第 <?php echo esc_attr( $i ); ?> 張"></button>
-			<?php endfor; ?>
-		</div>
+	<section class="home-hero" aria-label="睿聲助聽器最新活動" data-hero-slider>
+		<?php foreach ( $hero_slides as $index => $slide ) : ?>
+			<?php
+			$slide_id     = $slide->ID;
+			$desktop_url  = rlx_signal_post_image_url( $slide_id, 'rlx_image', 'hero-active.webp' );
+			$mobile_url   = rlx_signal_image_url( rlx_signal_post_meta( $slide_id, 'rlx_mobile_image', 'hero-active-mobile.jpg' ) );
+			$slide_active = 0 === $index;
+			?>
+			<a
+				href="<?php echo rlx_signal_post_link( $slide_id, '#products' ); ?>"
+				class="hero-slide <?php echo $slide_active ? 'is-active' : ''; ?>"
+				data-hero-slide
+				<?php echo $slide_active ? '' : 'aria-hidden="true" tabindex="-1"'; ?>
+			>
+				<picture>
+					<?php if ( $mobile_url ) : ?>
+						<source media="(max-width: 767px)" srcset="<?php echo esc_url( $mobile_url ); ?>">
+					<?php endif; ?>
+					<img src="<?php echo esc_url( $desktop_url ); ?>" alt="<?php echo esc_attr( get_the_title( $slide_id ) ); ?>" width="1920" height="850" fetchpriority="<?php echo $slide_active ? 'high' : 'auto'; ?>">
+				</picture>
+			</a>
+		<?php endforeach; ?>
+
+		<?php if ( count( $hero_slides ) > 1 ) : ?>
+			<button class="slider-arrow slider-arrow-left" type="button" aria-label="上一張" data-hero-prev><span aria-hidden="true">‹</span></button>
+			<button class="slider-arrow slider-arrow-right" type="button" aria-label="下一張" data-hero-next><span aria-hidden="true">›</span></button>
+			<div class="slider-dots" aria-label="活動輪播">
+				<?php foreach ( $hero_slides as $index => $slide ) : ?>
+					<button type="button" class="<?php echo 0 === $index ? 'is-active' : ''; ?>" aria-label="第 <?php echo esc_attr( $index + 1 ); ?> 張" data-hero-dot="<?php echo esc_attr( $index ); ?>"></button>
+				<?php endforeach; ?>
+			</div>
+		<?php endif; ?>
 	</section>
 
 	<section id="news" class="news-section">
 		<div class="home-container news-layout">
 			<header class="home-title news-title">
-				<p>News</p>
-				<h2>睿聲快訊</h2>
-				<img src="<?php echo $asset( 'news-hearing-aids.png' ); ?>" alt="" width="315" height="300">
+				<p><?php echo esc_html( rlx_signal_home_mod( 'rlx_news_eyebrow', 'News' ) ); ?></p>
+				<h2><?php echo esc_html( rlx_signal_home_mod( 'rlx_news_heading', '睿聲快訊' ) ); ?></h2>
+				<img src="<?php echo rlx_signal_asset( 'smarthearing/news-hearing-aids.png' ); ?>" alt="" width="315" height="300">
 			</header>
 			<div class="news-cards">
-				<?php foreach ( $news as $item ) : ?>
+				<?php foreach ( $news_items as $item ) : ?>
+					<?php
+					$item_id  = $item->ID;
+					$image    = rlx_signal_post_image_url( $item_id, 'rlx_image' );
+					$date     = rlx_signal_post_meta( $item_id, 'rlx_display_date', get_the_date( 'Y.m.d', $item_id ) );
+					$category = rlx_signal_first_term_name( $item_id, 'rlx_news_category' );
+					?>
 					<article class="news-card">
-						<a href="#">
-							<img src="<?php echo $asset( $item['image'] ); ?>" alt="<?php echo esc_attr( $item['title'] ); ?>" width="520" height="345" loading="lazy">
-							<p class="news-meta"><?php echo esc_html( $item['date'] . ' | ' . $item['category'] ); ?></p>
-							<h3><?php echo esc_html( $item['title'] ); ?></h3>
+						<a href="<?php echo rlx_signal_post_link( $item_id ); ?>">
+							<?php if ( $image ) : ?>
+								<img src="<?php echo esc_url( $image ); ?>" alt="<?php echo esc_attr( get_the_title( $item_id ) ); ?>" width="520" height="345" loading="lazy">
+							<?php endif; ?>
+							<p class="news-meta"><?php echo esc_html( trim( $date . ( $category ? ' | ' . $category : '' ) ) ); ?></p>
+							<h3><?php echo esc_html( get_the_title( $item_id ) ); ?></h3>
 						</a>
 					</article>
 				<?php endforeach; ?>
@@ -80,13 +82,13 @@ $brands = array(
 	<section id="about" class="reservation-section">
 		<div class="home-container reservation-inner">
 			<div class="reservation-copy">
-				<p class="english-title">Hearing is Our Concern</p>
-				<h2>助聽器產品和解決顧客聽力問題的領導者</h2>
-				<p>提供在地化服務，並透過精密的檢測設備、專業聽力師及選配人員，導入歐美多品牌高品質助聽器產品，讓您買的放心，聽的安心。</p>
+				<p class="english-title"><?php echo esc_html( rlx_signal_home_mod( 'rlx_about_eyebrow', 'Hearing is Our Concern' ) ); ?></p>
+				<h2><?php echo esc_html( rlx_signal_home_mod( 'rlx_about_heading', '助聽器產品和解決顧客聽力問題的領導者' ) ); ?></h2>
+				<p><?php echo esc_html( rlx_signal_home_mod( 'rlx_about_body', '提供在地化服務，並透過精密的檢測設備、專業聽力師及選配人員，導入歐美多品牌高品質助聽器產品，讓您買的放心，聽的安心。' ) ); ?></p>
 			</div>
-			<a class="reservation-button" href="#contact">
+			<a class="reservation-button" href="<?php echo esc_url( rlx_signal_home_mod( 'rlx_about_button_url', rlx_signal_page_url( 'appointment', '/appointment/' ) ) ); ?>">
 				<span aria-hidden="true" class="ear-mark">◖</span>
-				<span><strong>立即預約 聆聽美好</strong><small>Reservation</small></span>
+				<span><strong><?php echo esc_html( rlx_signal_home_mod( 'rlx_about_button_title', '立即預約 聆聽美好' ) ); ?></strong><small><?php echo esc_html( rlx_signal_home_mod( 'rlx_about_button_subtitle', 'Reservation' ) ); ?></small></span>
 				<i aria-hidden="true">›</i>
 			</a>
 		</div>
@@ -103,44 +105,44 @@ $brands = array(
 		</div>
 		<div class="home-container">
 			<div id="stories-panel" class="story-panel is-active" role="tabpanel" aria-labelledby="stories-tab" data-story-panel="stories">
-				<article class="story-card">
-					<img src="<?php echo $asset( 'story-1.png' ); ?>" alt="睿聲聽友分享" width="650" height="415" loading="lazy">
-					<div>
-						<p class="story-kind">聽友分享</p>
-						<h3>退休主任的無聲危機，積極面對突發耳聾 - 新營門市 吳委員</h3>
-						<p>六月初，鄰近下班的傍晚。門市大門被匆忙推開，家人神情慌張，專業團隊立即提供聽力評估與協助。</p>
-						<a href="#">更多內容</a>
-					</div>
-				</article>
-				<article class="story-card">
-					<img src="<?php echo $asset( 'story-2.jpg' ); ?>" alt="聽友重新掌握自信" width="650" height="415" loading="lazy">
-					<div>
-						<p class="story-kind">聽友分享</p>
-						<h3>疫情導致聽損，陽光女孩重新掌握自信！ - 中山門市 黃經理</h3>
-						<p>面對突如其來的高頻聽力損失，透過專業選配與調整，重新找回清楚溝通的自在生活。</p>
-						<a href="#">更多內容</a>
-					</div>
-				</article>
+				<?php foreach ( $stories as $story ) : ?>
+					<?php
+					$story_id = $story->ID;
+					$image    = rlx_signal_post_image_url( $story_id, 'rlx_image' );
+					$label    = rlx_signal_first_term_name( $story_id, 'rlx_story_type' );
+					?>
+					<article class="story-card">
+						<?php if ( $image ) : ?>
+							<img src="<?php echo esc_url( $image ); ?>" alt="<?php echo esc_attr( get_the_title( $story_id ) ); ?>" width="650" height="415" loading="lazy">
+						<?php endif; ?>
+						<div>
+							<p class="story-kind"><?php echo esc_html( $label ); ?></p>
+							<h3><?php echo esc_html( get_the_title( $story_id ) ); ?></h3>
+							<p><?php echo esc_html( rlx_signal_excerpt( $story_id ) ); ?></p>
+							<a href="<?php echo rlx_signal_post_link( $story_id ); ?>"><?php echo esc_html( rlx_signal_post_meta( $story_id, 'rlx_link_label', '更多內容' ) ); ?></a>
+						</div>
+					</article>
+				<?php endforeach; ?>
 			</div>
 			<div id="articles-panel" class="story-panel" role="tabpanel" aria-labelledby="articles-tab" data-story-panel="articles" hidden>
-				<article class="story-card">
-					<img src="<?php echo $asset( 'story-3.png' ); ?>" alt="助聽器知識介紹" width="650" height="415" loading="lazy">
-					<div>
-						<p class="story-kind">聽力小百科</p>
-						<h3>助聽器正確使用與保養全攻略</h3>
-						<p>認識助聽器的功能、清潔保養技巧，以及配戴初期常見問題，讓聽力不卡卡。</p>
-						<a href="#">更多內容</a>
-					</div>
-				</article>
-				<article class="story-card">
-					<img src="<?php echo $asset( 'story-4.png' ); ?>" alt="專業聽力檢查" width="650" height="415" loading="lazy">
-					<div>
-						<p class="story-kind">聽力小百科</p>
-						<h3>如何在家自我聽力篩檢？</h3>
-						<p>及早察覺聽力變化，並由專業人員進一步評估，是維持生活品質的重要一步。</p>
-						<a href="#">更多內容</a>
-					</div>
-				</article>
+				<?php foreach ( $articles as $article ) : ?>
+					<?php
+					$article_id = $article->ID;
+					$image      = rlx_signal_post_image_url( $article_id, 'rlx_image' );
+					$label      = rlx_signal_first_term_name( $article_id, 'rlx_story_type' );
+					?>
+					<article class="story-card">
+						<?php if ( $image ) : ?>
+							<img src="<?php echo esc_url( $image ); ?>" alt="<?php echo esc_attr( get_the_title( $article_id ) ); ?>" width="650" height="415" loading="lazy">
+						<?php endif; ?>
+						<div>
+							<p class="story-kind"><?php echo esc_html( $label ); ?></p>
+							<h3><?php echo esc_html( get_the_title( $article_id ) ); ?></h3>
+							<p><?php echo esc_html( rlx_signal_excerpt( $article_id ) ); ?></p>
+							<a href="<?php echo rlx_signal_post_link( $article_id ); ?>"><?php echo esc_html( rlx_signal_post_meta( $article_id, 'rlx_link_label', '更多內容' ) ); ?></a>
+						</div>
+					</article>
+				<?php endforeach; ?>
 			</div>
 			<div class="story-progress" aria-hidden="true"><span></span></div>
 		</div>
@@ -148,26 +150,44 @@ $brands = array(
 
 	<section id="products" class="brands-section">
 		<header class="home-title centered-title">
-			<p>Collection</p>
-			<h2>嚴選優質品牌</h2>
+			<p><?php echo esc_html( rlx_signal_home_mod( 'rlx_brands_eyebrow', 'Collection' ) ); ?></p>
+			<h2><?php echo esc_html( rlx_signal_home_mod( 'rlx_brands_heading', '嚴選優質品牌' ) ); ?></h2>
 		</header>
 		<div class="home-container brand-row">
 			<?php foreach ( $brands as $brand ) : ?>
+				<?php
+				$brand_id = $brand->ID;
+				$image    = rlx_signal_post_image_url( $brand_id, 'rlx_image' );
+				?>
 				<article class="brand-card">
-					<img src="<?php echo $asset( $brand['image'] ); ?>" alt="<?php echo esc_attr( $brand['title'] ); ?>" loading="lazy">
-					<h3><?php echo esc_html( $brand['title'] ); ?></h3>
-					<a href="#">系列商品</a>
+					<?php if ( $image ) : ?>
+						<img src="<?php echo esc_url( $image ); ?>" alt="<?php echo esc_attr( get_the_title( $brand_id ) ); ?>" loading="lazy">
+					<?php endif; ?>
+					<h3><?php echo esc_html( get_the_title( $brand_id ) ); ?></h3>
+					<a href="<?php echo rlx_signal_post_link( $brand_id ); ?>"><?php echo esc_html( rlx_signal_post_meta( $brand_id, 'rlx_link_label', '系列商品' ) ); ?></a>
 				</article>
 			<?php endforeach; ?>
 		</div>
-		<div class="brand-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+		<div class="brand-dots" aria-hidden="true">
+			<?php foreach ( $brands as $brand ) : ?>
+				<i></i>
+			<?php endforeach; ?>
+		</div>
 	</section>
 
 	<section id="stores" class="promo-section">
 		<div class="home-container promo-grid">
-			<a href="#"><img src="<?php echo $asset( 'promo-map.png' ); ?>" alt="睿聲門市地圖" width="600" height="400" loading="lazy"></a>
-			<a href="#"><img src="<?php echo $asset( 'promo-subscription.png' ); ?>" alt="睿聲助聽器訂閱制方案" width="600" height="400" loading="lazy"></a>
-			<a href="#"><img src="<?php echo $asset( 'promo-test.png' ); ?>" alt="線上聽力測試" width="600" height="400" loading="lazy"></a>
+			<?php foreach ( $promos as $promo ) : ?>
+				<?php
+				$promo_id = $promo->ID;
+				$image    = rlx_signal_post_image_url( $promo_id, 'rlx_image' );
+				?>
+				<a href="<?php echo rlx_signal_post_link( $promo_id ); ?>">
+					<?php if ( $image ) : ?>
+						<img src="<?php echo esc_url( $image ); ?>" alt="<?php echo esc_attr( get_the_title( $promo_id ) ); ?>" width="600" height="400" loading="lazy">
+					<?php endif; ?>
+				</a>
+			<?php endforeach; ?>
 		</div>
 	</section>
 </main>

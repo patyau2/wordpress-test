@@ -3,7 +3,7 @@ Theme Name: RLX Signal
 Theme URI: https://rlxhk.com/
 Author: RLX
 Description: A WordPress homepage closely modelled on Smart Hearing Taiwan.
-Version: 2.0.0
+Version: 2.1.1
 Requires at least: 6.5
 Requires PHP: 8.0
 Text Domain: rlx-signal
@@ -144,7 +144,51 @@ p {
 }
 
 .nav-list li {
+	position: relative;
 	display: flex;
+}
+
+.nav-list .sub-menu {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	visibility: hidden;
+	min-width: 150px;
+	margin: 0;
+	padding: 8px 0;
+	background: #fff;
+	color: var(--ink);
+	box-shadow: 0 12px 28px rgba(49, 0, 13, 0.18);
+	list-style: none;
+	opacity: 0;
+	transform: translateY(8px);
+	transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+}
+
+.nav-list .sub-menu li,
+.nav-list .sub-menu a {
+	display: block;
+	width: 100%;
+}
+
+.nav-list .sub-menu a {
+	min-height: 44px;
+	padding: 10px 18px;
+	font-size: 0.9rem;
+	font-weight: 500;
+}
+
+.nav-list .sub-menu a:hover,
+.nav-list .sub-menu a:focus-visible {
+	background: #f5ecef;
+	color: var(--red);
+}
+
+.nav-list .menu-item-has-children:hover > .sub-menu,
+.nav-list .menu-item-has-children:focus-within > .sub-menu {
+	visibility: visible;
+	opacity: 1;
+	transform: translateY(0);
 }
 
 .nav-list a,
@@ -228,6 +272,17 @@ p {
 	height: 100%;
 }
 
+.hero-slide {
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 260ms ease;
+}
+
+.hero-slide.is-active {
+	opacity: 1;
+	pointer-events: auto;
+}
+
 .hero-slide img {
 	position: absolute;
 	top: 50%;
@@ -235,8 +290,9 @@ p {
 	display: block;
 	width: 100%;
 	max-width: none;
-	height: auto;
-	transform: translate(-50%, -50%) scale(1.1);
+	height: 100%;
+	object-fit: contain;
+	transform: translate(-50%, -50%);
 	transform-origin: center;
 }
 
@@ -279,21 +335,31 @@ left: 0;
 z-index: 2;
 	display: flex;
 	justify-content: center;
-	gap: 13px;
+	gap: 0;
 }
 
 .slider-dots button {
-	width: 7px;
-	height: 7px;
+	position: relative;
+	display: grid;
+	width: 44px;
+	height: 44px;
 	padding: 0;
 	border: 0;
+	background: transparent;
+	cursor: pointer;
+	place-items: center;
+}
+
+.slider-dots button::before {
+	width: 7px;
+	height: 7px;
 	border-radius: 50%;
 	background: #fff;
-	cursor: pointer;
+	content: "";
 	opacity: 0.9;
 }
 
-.slider-dots button.is-active {
+.slider-dots button.is-active::before {
 	outline: 1px solid #fff;
 	outline-offset: 5px;
 }
@@ -372,9 +438,9 @@ z-index: 2;
 
 .news-card img {
 	width: 100%;
-	height: 230px;
-	aspect-ratio: auto;
-	object-fit: cover;
+	height: auto;
+	aspect-ratio: 430 / 285;
+	object-fit: contain;
 	transition: opacity 180ms ease;
 }
 
@@ -513,12 +579,9 @@ z-index: 2;
 	cursor: pointer;
 }
 
-.story-tab:first-child {
+.story-tab.is-active {
 	background: #fff;
 	color: var(--red);
-}
-
-.story-tab.is-active {
 	box-shadow: inset 0 -4px 0 var(--red);
 }
 
@@ -745,9 +808,9 @@ z-index: 2;
 
 .promo-grid img {
 	width: 100%;
-	height: 295px;
-	aspect-ratio: auto;
-	object-fit: cover;
+	height: auto;
+	aspect-ratio: 505 / 335;
+	object-fit: contain;
 	transition: transform 300ms ease;
 }
 
@@ -809,6 +872,17 @@ z-index: 2;
 	color: var(--muted);
 	font-size: 0.7rem;
 	line-height: 1.35;
+}
+
+.footer-nav-list {
+	display: contents;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.footer-nav-list li {
+	display: contents;
 }
 
 .footer-contact {
@@ -893,6 +967,202 @@ z-index: 2;
 	min-height: 65dvh;
 	margin-inline: auto;
 	padding: 100px 0;
+}
+
+.inner-page + .site-footer,
+.inner-page ~ .site-footer {
+	margin-top: 0;
+}
+
+.page-hero {
+	padding: 72px max(32px, calc((100vw - 1180px) / 2));
+	background: var(--red);
+	color: #fff;
+}
+
+.page-hero p {
+	margin-bottom: 10px;
+	font-family: Georgia, serif;
+	font-size: 1rem;
+	font-style: italic;
+}
+
+.page-hero h1 {
+	max-width: 920px;
+	margin: 0;
+	font-size: clamp(2rem, 4vw, 3.5rem);
+	line-height: 1.25;
+}
+
+.page-content,
+.single-content {
+	font-size: 1.05rem;
+}
+
+.entry-content {
+	max-width: 800px;
+}
+
+.entry-content h2 {
+	margin-top: 42px;
+	font-size: 1.5rem;
+}
+
+.entry-content a:not(.content-button) {
+	color: var(--red);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.content-button,
+.reservation-form button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 48px;
+	padding: 11px 24px;
+	border: 1px solid var(--red);
+	background: var(--red);
+	color: #fff;
+	font-weight: 700;
+	cursor: pointer;
+	transition: background-color 180ms ease, color 180ms ease;
+}
+
+.content-button:hover,
+.reservation-form button:hover {
+	background: var(--red-deep);
+}
+
+.archive-shell {
+	padding-top: 72px;
+}
+
+.archive-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 32px;
+}
+
+.archive-card {
+	border: 1px solid var(--line);
+	background: #fff;
+}
+
+.archive-card img {
+	width: 100%;
+	aspect-ratio: 16 / 10;
+	object-fit: cover;
+}
+
+.archive-card div {
+	padding: 24px;
+}
+
+.archive-card h2 {
+	margin-bottom: 12px;
+	font-size: 1.2rem;
+	line-height: 1.5;
+}
+
+.archive-card p {
+	color: var(--muted);
+}
+
+.archive-card .archive-meta,
+.archive-card span,
+.single-meta {
+	color: var(--red);
+	font-size: 0.86rem;
+}
+
+.single-featured {
+	width: min(100%, 920px);
+	max-height: 620px;
+	margin-bottom: 32px;
+	object-fit: contain;
+	object-position: left center;
+}
+
+.reservation-form {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 22px;
+	max-width: 780px;
+	margin-top: 36px;
+}
+
+.reservation-form p {
+	margin: 0;
+}
+
+.reservation-form label:not(.form-consent) {
+	display: block;
+	margin-bottom: 7px;
+	font-weight: 600;
+}
+
+.reservation-form input:not([type="checkbox"]),
+.reservation-form textarea {
+	width: 100%;
+	min-height: 48px;
+	padding: 10px 12px;
+	border: 1px solid #aaa6a8;
+	border-radius: 0;
+	background: #fff;
+	font: inherit;
+}
+
+.reservation-form textarea {
+	min-height: 132px;
+	resize: vertical;
+}
+
+.form-wide {
+	grid-column: 1 / -1;
+}
+
+.form-consent {
+	display: flex;
+	gap: 12px;
+	align-items: flex-start;
+}
+
+.form-consent input {
+	width: 20px;
+	height: 20px;
+	margin-top: 3px;
+}
+
+.form-notice {
+	max-width: 780px;
+	margin: 24px 0;
+	padding: 14px 18px;
+	border-left: 4px solid;
+}
+
+.form-notice.is-success {
+	border-color: #237a45;
+	background: #edf8f1;
+}
+
+.form-notice.is-error {
+	border-color: var(--red);
+	background: #fff0f3;
+}
+
+.sitemap-list {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0 32px;
+	padding: 0;
+	list-style: none;
+}
+
+.sitemap-list a {
+	display: block;
+	padding: 15px 0;
+	border-bottom: 1px solid var(--line);
 }
 
 @media (max-width: 1250px) {
@@ -995,6 +1265,23 @@ z-index: 2;
 		display: block;
 	}
 
+	.nav-list .sub-menu {
+		position: static;
+		visibility: visible;
+		padding: 0 0 0 18px;
+		background: transparent;
+		color: #fff;
+		box-shadow: none;
+		opacity: 1;
+		transform: none;
+	}
+
+	.nav-list .sub-menu a {
+		min-height: 46px;
+		border-color: rgba(255, 255, 255, 0.12);
+		font-size: 0.9rem;
+	}
+
 	.nav-list a {
 		justify-content: flex-start;
 		width: 100%;
@@ -1056,9 +1343,14 @@ z-index: 2;
 	}
 
 	.hero-slide img {
-		width: auto;
+		width: 100%;
 		height: 100%;
+		object-fit: contain;
 		transform: translate(-50%, -50%);
+	}
+
+	.home-hero {
+		aspect-ratio: 5 / 3;
 	}
 
 	.slider-arrow {
@@ -1067,13 +1359,7 @@ z-index: 2;
 	}
 
 	.slider-dots {
-		bottom: 13px;
-		gap: 9px;
-	}
-
-	.slider-dots button {
-		width: 6px;
-		height: 6px;
+		bottom: -3px;
 	}
 
 	.news-section {
@@ -1082,12 +1368,18 @@ z-index: 2;
 
 	.news-layout {
 		display: block;
+		height: auto;
 	}
 
 	.news-title {
 		display: grid;
 		grid-template-columns: 1fr 120px;
+		grid-template-rows: auto auto;
+		align-content: start;
+		gap: 8px 12px;
+		height: 220px;
 		margin-bottom: 28px;
+		padding-left: 16px;
 	}
 
 	.news-title p,
@@ -1105,6 +1397,11 @@ z-index: 2;
 	.news-cards {
 		grid-template-columns: 1fr;
 		gap: 28px;
+		height: auto;
+	}
+
+	.news-card a {
+		height: auto;
 	}
 
 	.news-card h3 {
@@ -1211,6 +1508,24 @@ z-index: 2;
 		grid-template-columns: 1fr;
 	}
 
+	.page-hero {
+		padding: 54px 16px;
+	}
+
+	.content-shell {
+		padding: 64px 0;
+	}
+
+	.archive-grid,
+	.reservation-form,
+	.sitemap-list {
+		grid-template-columns: 1fr;
+	}
+
+	.form-wide {
+		grid-column: auto;
+	}
+
 	.footer-legal {
 		width: 100%;
 		height: auto;
@@ -1225,6 +1540,12 @@ z-index: 2;
 
 	.footer-legal nav {
 		grid-column: 1;
+	}
+
+	.footer-legal nav a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
 	}
 
 	.footer-main {
